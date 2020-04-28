@@ -26,7 +26,7 @@ else:
 
 with open(CFG.train_file, 'r') as rf:
     ann_lines = rf.readlines()
-ann_lines = [ann.rstrip('\n') for ann in ann_lines][:CFG.data_to_use]
+ann_lines = [ann.rstrip('\n') for ann in ann_lines]
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 if len(physical_devices) > 0:

@@ -12,7 +12,7 @@ from config import CFG
 class Dataset:
 
     def __init__(self):
-        self.ann_lines, self.num_samples = self.load_annotations_wrapper(CFG.data_to_use)
+        self.ann_lines, self.num_samples = self.load_annotations()
         self.batch_count = 0
 
     def __iter__(self):
@@ -54,13 +54,6 @@ class Dataset:
             ann_lines = rf.readlines()
         ann_lines = [ann.rstrip('\n') for ann in ann_lines]
         return ann_lines, len(ann_lines)
-
-    # temperary
-    def load_annotations_wrapper(self, num):
-        ann_lines, num_lines = self.load_annotations()
-        ann = ann_lines[:num]
-        np.random.shuffle(ann)
-        return ann, num
 
     def random_horizontal_flip(self, image, bboxes):
         if random.random() < 0.5:

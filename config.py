@@ -13,11 +13,10 @@ CFG.checkpoint_dir = CFG.log_dir + "ckpt-voc"
 CFG.checkpoint_prefix = os.path.join(CFG.checkpoint_dir, "ckpt")
 
 # config train
-CFG.data_to_use = 100
 CFG.data_aug = False
 CFG.batch_size = 5
-CFG.train_epoch = 100
 CFG.batch_per_epoch = 20
+CFG.train_epoch = 100
 CFG.output_step = CFG.batch_per_epoch
 CFG.lr_init = 1.0e-5
 CFG.lr_peak = 7.0e-5
