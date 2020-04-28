@@ -9,7 +9,7 @@ from config import CFG
 from core.model import MobileYolo_small
 
 
-output_path = "/home/jerry/YOLOv3/data/test/"
+output_path = CFG.log_dir
 
 tf.keras.backend.set_learning_phase(False)
 model_input = tf.keras.layers.Input([CFG.input_shape[0], CFG.input_shape[1], 3])

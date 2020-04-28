@@ -6,15 +6,15 @@ import numpy as np
 import tensorflow as tf
 import core.utils as utils
 from config import CFG
-from core.model import YoloV3
+from core.model import MobileYolo_small
 
-video_path = '/home/jerry/YOLOv3/data/test/test.mp4'
-output_path = '/home/jerry/YOLOv3/data/test/test_out.avi'
+video_path = './data/test.mp4'
+output_path = './log/test_out.avi'
 output_format = 'XVID'
 
 tf.keras.backend.set_learning_phase(False)
 model_input = tf.keras.layers.Input([CFG.input_shape[0], CFG.input_shape[1], 3])
-model_output = YoloV3(model_input, training=False)
+model_output = MobileYolo_small(model_input, training=False)
 model = tf.keras.Model(model_input, model_output)
 
 ckpt = tf.train.Checkpoint(model=model)

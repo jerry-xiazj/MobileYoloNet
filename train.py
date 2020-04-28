@@ -19,7 +19,7 @@ val_set = Dataset(CFG.val_file, CFG.batch_size, 1)
 #           Create Model           #
 ####################################
 tf.print("Start creating model.")
-input_tensor = tf.keras.layers.Input(shape=(224, 224, 3))
+input_tensor = tf.keras.layers.Input([CFG.input_shape[0], CFG.input_shape[1], 3])
 output_tensor = MobileYolo_small(input_tensor)
 model = tf.keras.Model(inputs=input_tensor, outputs=output_tensor)
 
