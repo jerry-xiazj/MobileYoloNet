@@ -13,16 +13,16 @@ Including but not limited to: Ubuntu 18.04.4 LTS, Windows Subsystem for Linux (W
 
 ## Usage
 1. To run the code, you need to create two folders.
-   ```bash
+   ```shell
    mkdir data
    mkdir log
    ```
 
-2. Edit and run `tool/voc_ann.py` to create `train_file` for Pascal VOC dataset
+2. Edit and run `./tool/voc_ann.py` to create `train_file` for Pascal VOC dataset
 
    **or**
 
-   prepare *images* and *train_file* with your own data.
+   prepare `images` and `train_file` with your own data.
 
    `train_file` is put in `./data` and looks like:
    ```
@@ -33,12 +33,12 @@ Including but not limited to: Ubuntu 18.04.4 LTS, Windows Subsystem for Linux (W
    /path/to/images/5.other 1,22,458,375,18 112,78,376,328,4
    ```
    - Every 5 numbers represent 1 ground truth box.
-   - Each number in the 5 numbers represents: xmin, ymin, xmax, ymax, category
+   - Each of the 5 numbers represents: xmin, ymin, xmax, ymax, category
 
 3. Config your training process in `config.py`.
 
 4. Start training with:
-   ```bash
+   ```shell
    python3 train.py
    ```
 
@@ -51,7 +51,7 @@ Including but not limited to: Ubuntu 18.04.4 LTS, Windows Subsystem for Linux (W
    /path/to/images/5.other
    ```
    Start predicting with:
-   ```bash
+   ```shell
    python3 predict.py
    ```
 
