@@ -66,13 +66,13 @@ global_step = 0
 
 for epoch in range(1, 1+CFG.train_epoch):
 
-    for batch, train_img, train_class in train_set:
+    for batch, (train_img, train_box) in train_set:
         tf.print(
             "=> Epoch: %3d" % epoch, "/", CFG.train_epoch,
             "Batch: %3d" % batch, "/", CFG.batch_per_epoch,
             "lr: %.5e" % optimizer.lr.numpy(), end=" "
         )
-        loss_train = train_step(train_img, train_class, loss)
+        loss_train = train_step(train_img, train_box, loss)
         tf.print("loss_train: %.5f" % loss_train)
         avg_loss.update_state(loss_train)
 

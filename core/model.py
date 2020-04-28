@@ -252,3 +252,52 @@ def MobileYolo_small(x, training=True):
     outputs = tf.keras.layers.Lambda(lambda x: yolo_nms(x), name='yolo_nms')((boxes_0, boxes_1, boxes_2))
 
     return outputs
+
+
+def YoloLoss(fm_size, anchors_org):
+    def yolo_loss(y_true_xywh_reg, pred):
+        # 0. prepare
+        grid_cell = utils.make_grid_cell(fm_size)
+        anchor_fm = anchors_org / CFG.input_shape[::-1] * fm_size[::-1]
+
+        # 1. transform pred
+        y_pred_xy_t, y_pred_wh_t, y_pred_conf, y_pred_clss = tf.split(pred, (2, 2, 1, CFG.num_classes), axis=-1)
+        y_pred_xywh_t = tf.concat([tf.sigmoid(y_pred_xy_t), y_pred_wh_t], axis=-1)
+        y_pred_conf = tf.sigmoid(y_pred_conf)
+        y_pred_clss = tf.sigmoid(y_pred_clss)
+        y_pred_xywh_fm = utils.t2xywh_fm(pred[..., 0:4], grid_cell, anchor_fm)
+
+        # 2. transform true
+        y_true_conf = y_true_xywh_reg[..., 4:5]
+        y_true_clss = y_true_xywh_reg[..., 5:]
+        y_true_xywh_fm = utils.reg2fm(y_true_xywh_reg[..., 0:4], fm_size)
+        y_true_xywh_t = utils.xywh_fm2t(y_true_xywh_fm, grid_cell, anchor_fm, y_true_conf)[..., 0:4]
+
+        # 3. calculate mask
+        conf_mask = tf.squeeze(y_true_conf, axis=-1)
+        best_iou = tf.map_fn(
+            lambda x: tf.math.reduce_max(utils.iou(
+                x[0][:, :, :, tf.newaxis, :],
+                tf.boolean_mask(x[1], tf.cast(x[2], tf.bool))[tf.newaxis, tf.newaxis, tf.newaxis, :, :]), axis=-1),
+            (y_pred_xywh_fm, y_true_xywh_fm, conf_mask),
+            tf.float32)
+        noobj_mask = (1.0 - conf_mask) * tf.cast(best_iou < CFG.ignore_thresh, tf.float32)
+
+        # 4. calculate loss_xywh
+        box_loss_scale = 2.0 - y_true_xywh_reg[..., 2]*y_true_xywh_reg[..., 3]
+        loss_xywh = conf_mask * box_loss_scale * tf.math.reduce_sum(
+            tf.math.square(y_true_xywh_t-y_pred_xywh_t), axis=-1
+        )
+
+        # 5. calculate loss_conf
+        loss_conf = tf.losses.binary_crossentropy(y_true_conf, y_pred_conf)
+        loss_conf = conf_mask * loss_conf + noobj_mask * loss_conf
+
+        # 6. calculate loss_clss
+        loss_clss = conf_mask * tf.losses.binary_crossentropy(y_true_clss, y_pred_clss)
+
+        # 7. average over batch (batch, gridy, gridx, anchors) => (1)
+        loss_total = tf.math.reduce_sum(loss_xywh + loss_conf + loss_clss) / CFG.batch_size
+
+        return loss_total
+    return yolo_loss
