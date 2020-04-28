@@ -81,7 +81,7 @@ for epoch in range(1, 1+CFG.train_epoch):
             learning_rate = optimizer.lr.numpy() * CFG.lr_decay
             optimizer.lr.assign(learning_rate)
 
-    for _, val_img, val_box in val_set:
+    for _, (val_img, val_box) in val_set:
         pred = model(val_img)
         regularization_loss = tf.math.add_n(model.losses)
         pred_loss = []
