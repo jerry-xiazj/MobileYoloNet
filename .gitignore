@@ -5,3 +5,4 @@
 /test/
 *.h5
 __pycache__/
+*test*
