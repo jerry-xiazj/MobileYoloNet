@@ -10,6 +10,7 @@ from core.model import MobileYolo_small
 
 
 output_path = CFG.log_dir
+predict_path = CFG.val_file
 
 tf.keras.backend.set_learning_phase(False)
 model_input = tf.keras.layers.Input([CFG.input_shape[0], CFG.input_shape[1], 3])
@@ -24,7 +25,7 @@ if manager.latest_checkpoint:
 else:
     tf.print("Initializing from scratch.")
 
-with open(CFG.train_file, 'r') as rf:
+with open(predict_path, 'r') as rf:
     ann_lines = rf.readlines()
 ann_lines = [ann.rstrip('\n') for ann in ann_lines]
 

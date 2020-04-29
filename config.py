@@ -20,7 +20,7 @@ CFG.batch_size = 5
 CFG.batch_per_epoch = 20
 CFG.train_epoch = 90
 CFG.output_step = CFG.batch_per_epoch
-CFG.lr_init = 1.0e-3
+CFG.lr_init = 1.0e-4
 CFG.lr_decay = 0.9
 CFG.decay_step = 3 * CFG.batch_per_epoch
 

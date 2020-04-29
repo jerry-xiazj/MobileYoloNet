@@ -44,7 +44,7 @@ tf.print("Finish creating model.")
 ####################################
 
 
-# @tf.function
+@tf.function
 def train_step(batch_img, batch_box, loss):
     with tf.GradientTape() as tape:
         pred = model(batch_img)
