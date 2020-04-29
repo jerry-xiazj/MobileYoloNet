@@ -10,17 +10,18 @@ CFG = edict()
 # config path
 CFG.train_file = "./data/train_file"
 CFG.val_file = "./data/val_file"
+CFG.test_file = "./data/test_file"
 CFG.log_dir = "./log/"
 CFG.checkpoint_dir = CFG.log_dir + "ckpt-voc"
 CFG.checkpoint_prefix = os.path.join(CFG.checkpoint_dir, "ckpt")
 
 # config train
 CFG.data_aug = True
-CFG.batch_size = 5
+CFG.batch_size = 6
 CFG.batch_per_epoch = 20
 CFG.train_epoch = 90
 CFG.output_step = CFG.batch_per_epoch
-CFG.lr_init = 1.0e-4
+CFG.lr_init = 1.0e-3
 CFG.lr_decay = 0.9
 CFG.decay_step = 3 * CFG.batch_per_epoch
 
